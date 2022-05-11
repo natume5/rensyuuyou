@@ -1,0 +1,8 @@
+環境変数$python_projectsを作って、あなたがpythonファイルの置いているディレクトリの絶対パスを設定する。
+環境変数を.profileファイルに保存して、cd $python_prjectsコマンドでそのディレクトリに移動する。
+
+
+#!/bin/bash
+# add the next line to your .profile file.
+export python_projects=~
+cd $python_projects

@@ -1,0 +1,18 @@
+# Simpleクラスに動的にクラスメゾットgreetingを追加する
+class Simple:    # Simpleクラス定義
+    pass    # Simpleクラスにはメンバーはいない
+
+Simple.x = 100    # クラス変数xを追加する
+print(Simple.x * 2)
+
+
+def hello(msg="ハロー"):    # helloメゾット定義
+    print(msg)
+
+Simple.greeting = hello    # greetingクラスメゾットを追加
+print(Simple.greeting("おはよう！"))    # 実行
+
+# 動的にインスタンス変数を追加する
+obj = Simple()
+obj.a = 123
+print(obj.a)

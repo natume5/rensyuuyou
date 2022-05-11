@@ -1,0 +1,37 @@
+	Python(パイソン)エラーに関する質問
+
+Traceback (most recent call last):
+
+File "C:\Users\toshio\Desktop\PYコーディング\p54(194).py", line 2, in <module>
+window = tkinter.TK()
+AttributeError: module 'tkinter' has no attribute 'TK'
+
+上記エラーは、「TKというモジュールがない」という意味でしょうか?
+バージョンは3.7なのになぜなのでしょうか?
+どうすれば、よいのでしょうか? 
+
+
+windoiw = tkinter.Tk()
+
+より前に
+
+import tkinter
+
+は書いていますか（line 2 ということなので、ちょっと心配なのですが・・・）
+
+
+というか大文字小文字は同一視するんでしたっけ？＞python
+
+
+
+>上記エラーは、「TKというモジュールがない」という意味でしょうか?
+
+いいえ（TKはモジュールの名前ではありません）。
+
+tkinter というモジュールには TK という属性（attribute）はありません・・・というエラーです。
+
+＃一般的な言語と同様、TK と Tk は区別されます。
+
+
+
+

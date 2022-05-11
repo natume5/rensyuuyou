@@ -1,0 +1,10 @@
+# fruitsセットから"banana"を削除する
+fruits = set()
+fruits.add("apple")
+fruits.add("orange")
+fruits.add("banana")
+fruits.add("peach")
+print(fruits)
+fruits.remove("banana")
+print(fruits)
+fruits.remove("banana")

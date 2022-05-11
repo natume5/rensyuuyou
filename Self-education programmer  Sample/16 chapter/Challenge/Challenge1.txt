@@ -1,0 +1,4 @@
+Bash‚ÅSelf-taught‚Æo—Í‚µ‚æ‚¤B
+
+
+echo Self-taught

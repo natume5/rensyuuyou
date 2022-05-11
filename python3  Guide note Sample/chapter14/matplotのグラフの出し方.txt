@@ -1,0 +1,7 @@
+このやり方でグラフが出た。python3入門ノートのやり方で出来なければ、こっちを使う。
+
+例
+import matplotlib.pyplot as plt
+data = [2, 4, 8, 16]
+plt.hist(data)
+plt.show()

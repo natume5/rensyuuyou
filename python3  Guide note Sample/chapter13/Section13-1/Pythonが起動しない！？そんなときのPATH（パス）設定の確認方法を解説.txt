@@ -1,0 +1,256 @@
+今日は、Pythonを使う前につまずきやすいPATH（パス）設定について説明します。
+
+この記事を読めば、
+そもそもPythonインタプリタが起動しない！
+なんでモジュール/ライブラリ/パッケージをimportできないの！
+
+といった問題が解決できます。
+
+ついでにPATHつながりで、Python 3.4以降で使えるようになったpathlibも紹介します。
+本当に、あなたの問題は解決できるのか！？　行ってみましょう！
+
+
+
+PATH（パス）の設定を確認しよう
+
+ここではPythonのプログラムが動かない場合の対処法として、
+
+    Pythonが起動しない場合のPATH設定の確認方法
+    モジュールが利用できない場合のPATH設定の確認方法
+
+
+について解説いたします。
+
+
+PATH（パス）の設定が間違っている？
+
+Pythonのプログラムが動かない原因として、
+
+PATHの設定が間違っているのかな？
+
+という結論に至ったとき、どれだけの人が正しく問題を切り分けられているでしょうか。
+実は、Pythonで「PATHの設定が間違っている」と言われるケースは、2つあります。
+
+    （1）Pythonが起動しないケース
+    （2）モジュールが利用できないケース
+
+まずは、問題の切り分けが正しくできないと、解決もできません。
+順番に見ていきましょう。
+
+
+（1）Pythonが起動しない場合のPATH設定を確認しよう
+
+「python」と入力したときに、以下のようにPythonインタプリタが起動するはずが…
+
+(OpenCV) D:\>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+
+以下のようにエラーメッセージが表示される状態です。
+
+
+Windowsの例：
+
+D:\>python
+'python' は、内部コマンドまたは外部コマンド、
+操作可能なプログラムまたはバッチ ファイルとして認識されていません。
+
+Linuxの例：
+
+[email protected]:~$ python
+bash: python: そのようなファイルやディレクトリはありません
+
+（1-1）解決するにはもう一度インストール！
+
+このケースでは、Pythonをもう一度インストールするのが簡単です。
+
+（1-2）それでダメなら…
+
+もう一度インストールしてもダメな場合は、環境変数PATHの設定を見直したいところです。
+ただ、あなたの環境でPythonがどこにインストールされているかわからないので、
+近くの専門家に相談するのが近道でしょう。
+
+
+
+（2）モジュールが利用できない場合のPATH設定を確認しよう
+
+「python」と入力するとPythonは起動できるけど、続けて「import mymodule」と入力すると、
+以下のように何も表示されないはずが…
+
+(OpenCV) D:\>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import mymodule
+>>>
+
+以下のようにエラーメッセージが表示される状態です。
+
+(OpenCV) D:\>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import mymodule
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'mymodule'
+>>>
+
+これを解決する方法は、3つあります。
+
+（2-1）pthファイルを作成しよう
+
+拡張子がpthのファイル（例：mymodule.pth。以降、pthファイル）を、
+site-packageフォルダに作成する方法がオススメです。
+
+たとえば、Anacondaを使っている場合は、「C:\Users\XXXXXX\Anaconda3\envs\OpenCV\Lib\site-packages」
+フォルダにpthファイルを作成します。
+
+mymodule.pyが「D:\mymodule-folder」フォルダに保存されている場合は、pthファイルに以下のように入力します。
+
+D:\mymodule-folder
+
+このように、モジュールが保存されているフォルダ名をドライブ名から全部書きます。
+site-packageフォルダにpthファイルを作成したら、改めてPythonを起動しましょう。
+
+
+
+（2-2）環境変数PYTHONPATHを設定しよう
+
+site-packagesフォルダが分からないときは、以下のコマンドを入力して環境変数PYTHONPATHを設定してから、
+Pythonを起動します。
+
+やはり、mymodule.pyが「D:\mymodule-folder」フォルダに保存されているとします。
+
+(OpenCV) D:\>set PYTHONPATH=%PYTHONPATH%;D:\mymodule-folder
+
+(OpenCV) D:\PyCharm\path-test>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import mymodule
+>>>
+
+PYTHONPATHは、Pythonを起動する前に設定してください。
+
+
+
+（2-3）プログラムの最初にsys.pathで設定しよう
+
+いまプログラムを書いているパソコンでしか動作させない！フォルダ構成も変えない！
+というのであれば、プログラムの最初にsys.pathで設定する方法もあります。
+非常に限定的なのでオススメはできません。
+
+Pythonインタプリタで動作させると以下のようになります。
+
+(OpenCV) D:\>python
+Python 3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import sys
+>>> sys.path.append("D:\mymodule-folder")
+>>> import mymodule
+>>>
+
+実は、（2-1）pthファイルを作成する方法も、（2-2）環境変数PYTHONPATHを設定する方法も、
+Pythonインタプリタを起動するときにsys.pathを初期設定する方法でした。
+
+つまり、いずれにせよsys.pathに「D:\mymodule-folder」
+を登録すればよかったということになるのですが、
+私のオススメは（2-1）pthファイルを作成する方法です。
+ぜひ試して見てください！
+
+
+
+プログラムでPATHを操作してみよう
+
+さて、ついでにプログラムでPATHを操作する方法も軽く紹介しておきましょう。
+
+これから説明する内容は、PythonをインストールしたPATHも、
+モジュールが保存されているPATHも関係ありませんので、まったく新しい気持ちで読んでくださいね。
+
+ファイル/ディレクトリの存在を確認する
+
+exists()が使えます。
+
+import pathlib
+path = pathlib.Path("D:\filename.txt")
+
+if path.exists():
+    print("ファイルが存在します。")
+else:
+    print("ファイルがありません。")
+
+
+
+ファイル名を取得する/ディレクトリを取得する
+
+昔は、os.path.split()を使っていましたね。
+
+import pathlib
+path = pathlib.Path("D:/path1/path2/filename.txt")
+
+print(path.parent)
+print(path.name)
+
+
+
+指定したパス以下のファイル一覧を取得する
+
+os.walk()を使って書いていたアレです。
+
+pathlibでは、iterdir()を使います。
+
+import pathlib
+path = pathlib.Path("D:/path1")
+
+for child in path.iterdir():
+   print(child)
+
+サブディレクトリを対象にしたり、拡張子を制限するときはglob()を使いましょう。
+
+import pathlib
+path = pathlib.Path("D:/path1")
+
+for child in path.glob("**"): # サブディレクトリを対象とする
+   print(child)
+
+
+
+パスを正規化する
+
+“..”を除去したりします。
+
+os.path.normpath()でやっていましたね。
+
+import pathlib
+path = pathlib.Path("D:/path1/../path2/../path3")
+
+print(path)
+
+path = path.resolve()
+
+print(path)
+
+そもそも"A//B"とか"A/B/"、"A/./B"は、pathlib.Path()の時点で正規化されますね。
+
+
+
+パスを分割する
+
+「D:\path1\path2\path3」を「('D:\\', 'path1', 'path2', 'path3')」に分割するには、partsを利用します。
+
+import pathlib
+path = pathlib.Path("D:/path1/path2/path3")
+
+print(path.parts)
+
+
+
+
+
+
+
+
+
+
+
+
+
