@@ -292,7 +292,7 @@ f.close()    # ファイルを閉じる
 """
 
 f = open('sample2.txt', 'w')
-f.write('aaaa bbbb cccc')
+f.write('aaaa bbbb cccc テスト書き込み中')
 f.close()
 
 """
@@ -310,3 +310,139 @@ f = open('sample2.txt', "a")
 読み込んだ後、書き込みたい場合は以下のようにr+を指定します。
 """
 
+f = open('sample2.txt', 'r+')
+
+"""
+文字コードの指定
+
+encoding引数に文字コードを指定することができます。
+encodingが指定されていない場合ははプラットフォームに依存します。
+
+対話モードで以下の２コマンドを実行してみてください。
+お使いの環境のデフォルトのencodingを調べることができます。
+
+$ python
+>>> import locale
+>>> locale.getpreferredencoding(False)
+'UTF-8'
+
+例えば、sjisを使用したい場合は、以下のように引数に'shift_jis'を指定します。
+"""
+
+f = open('sample.txt', 'r', encoding='shift_jis')
+
+"""
+with文　コンテキストマネージャ
+
+ファイルを開いた後はcloseが必要ですが、処理中に例外が発生したりするとclose処理が呼び出されず、
+予期せぬ結果がファイルに出力されたりロックされたままになったりします。
+こういったことを防ぐため、Pythonにはwith文を使用したコンテキストマネージャという仕組みがあります。
+
+with
+with open('ファイルパス',  'モード') as 変数名:
+    ファイルオブジェクトを扱う処理
+
+以下のサンプルでは、sample.txtを開いて内容を変数textに格納し、printで出力しています。
+"""
+
+with open('sample.txt', 'r') as f:
+	text = f.read()
+	print(text)
+
+"""
+途中で例外が発生しても、close処理が自動的に呼びだされます。
+
+以下はwith文の代わりにtry/finallyを使用した例です。
+比較してみると明らかにwith文の方がすっきり記述できまることが分かりますね。
+"""
+
+try:
+	f = open('sample.txt', 'r')
+	text = f.read()
+	print(text)
+finally:
+	f.close()
+
+
+print("--- Python入門　ファイルシステムの操作---")
+
+
+"""
+ファイル/ディレクトリの存在チェック
+
+指定したパスが存在するかどうかはos.path.existsを使用します。
+いずれもスクリプトの実行ディレクトリがカレントディレクトリとなります。
+また、指定したパスがファイルかディレクトリかの判定はそれぞれ
+os.path.isfile、os.path.isdirを使用して得ることができます。
+以下のサンプルでは、指定したパスに対して存在するかどうか、
+存在する場合はファイルかディレクトリかを判定してメッセージをprintで出力しています。
+"""
+
+import os
+path = 'sample.py'
+
+if os.path.exists(path):
+	print('指定したパスは存在します')
+
+	if os.path.isfile(path):
+		print('ファイルです')
+	if os.path.isdir(path):
+		print('ディレクトリです')
+else:
+	print('指定したパスは存在しません')
+
+
+"""
+ファイル/ディレクトリの作成と削除
+ファイルの削除
+
+os.removeにpathを指定するとファイルの削除ができます。
+なお、pathがディレクトリの場合はOSErrorが送出されます。
+ディレクトリを削除する場合は後述のrmdirを使用します。
+以下のサンプルではカレントディレクトリにあるfile1.txtを削除しています。
+"""
+
+# import os
+f = open('file1.txt', 'w')
+f.write('テスト書き込み中')
+f.close()
+os.remove('file1.txt')
+
+
+"""
+ディレクトリの作成と削除
+
+単一階層のディレクトリを作成する場合はos.mkdirを、複数階層を作成する場合はos.makedirsを使用します。
+また、逆にディレクトリを削除する場合はそれぞれos.rmdir、os.removedirsを使用します。
+以下のサンプルではディレクトリの作成と削除を行っています。
+"""
+
+# import os
+
+# ディレクトリを作成する
+os.mkdir('dir_1')
+os.makedirs('dir_2/dir_3')
+
+# ディレクトリを削除する
+os.rmdir('dir_1')
+os.removedirs('dir_2/dir_3')
+
+
+"""
+ファイル/ディレクトリの移動とコピー
+
+コピーと移動の場合はshutilモジュールを使用します。
+単一のファイルかディレクトリの場合はcopyメソッドを、
+ディレクトリごと再帰的にコピーする場合はcopytreeメソッドを使用します。
+以下のサンプルではそれぞれ単一のファイルのコピーとディレクトリごとのコピーを行っています。
+"""
+
+# import os
+import shutil
+
+
+shutil.copy('sample.txt', 'sample2.txt')    # 単一コピー
+os.mkdir('dir_1/')
+shutil.copytree('dir_1/', 'dir_2/')    # ディレクトリごと再帰的にコピー
+shutil.rmtree('dir_1/',)
+shutil.rmtree('dir_2/')
