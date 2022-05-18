@@ -154,8 +154,133 @@ print(text.count('bc'))    # 2
 
 
 """
+文字列のトリミング
+
+文字列のトリミング、つまり前後にある不要な空白
+(スペース・タブ文字・改行(\r, \n))を除去する場合はstripメソッドを使用します。
+また、前か後ろだけ除去する場合はそれぞれlstrip, rstripを使用します。
+"""
+
+text = ' abcabc '
+print(text.strip())    # abcabc
+print(text.lstrip())    # abcabc 左側だけstrip
+print(text.rstrip())    #  abcabc 右側だけstrip
+
 
 """
+大文字/小文字変換
+
+文字列を大文字、小文字に変換する場合はそれぞれupperメソッド、lowerメソッドを使用します。
+また、先頭だけ大文字にする場合は、capitalizeメソッドを使用します。
+いずれも戻り値に新たな文字列が返されます。
+"""
+
+text = 'abcDEFG'
+
+print(text.upper())    # ABCDEFG
+print(text.lower())    # abcdefg
+print(text.capitalize())    # Abcdefg
+
+
+
+print("--- Python入門　文字列の判定系メソッド---")
+
+
+"""
+判定メソッド
+
+Pythonの文字列には以下のような文字列の種別の判定用メソッドが用意されています。
+1文字以上でなおかつすべての文字が条件を満たしている場合、Trueが返されます。
+
+    isalnum：英字or数字
+    isalpha：英字
+    isascii：ASCII文字
+    isdigit：ASCII文字の数字
+    isdecimal：10進数の数字
+    isnumeric：数を表す文字
+    islower：子文字
+    isupper：大文字
+
+isalnumとisalpha
+
+ただし、注意が必要なのがisalnumとisalphaです。
+ここで記述されている英字とは「Unicode 文字データベースで "Letter" として定義されているもの」
+であるため、いわゆる全角文字等でも英字として扱われています。
+このため、純粋な英字であるかどうかの判別はisasciiと合わせて使用するなどの工夫が必要となります。
+以下のサンプルはisalnum、isalphaの使用して挙動を比較しています。
+"""
+
+# 半角英数字
+print("la".isalnum())    # True
+print("la".isalpha())    # True
+
+# 半角英字
+print("a".isalnum())    # True
+print("a".isalpha())    # True
+
+# 半角記号
+print("!".isalnum())    # False
+print("!".isalpha())    # False
+
+# 全角
+print("あ".isalnum())    # True
+print("あ".isalpha())    # True
+
+
+"""
+isdigit/isdecimal/isnumeric
+
+また、数字文字の判定としてisdecimal()、isdigit()、isnumeric()の
+3つの数値判定メソッドが用意されていますが、取り扱う文字に依っては微妙に挙動が異なります。
+小数点を含む文字はいずれも数値として判定されないため、注意が必要です。
+また符号付きの場合も数値とは判定されません。このため、数値への変換可否に使用することはおすすめしません。
+
+以下のサンプルはisdigit、isdecimal、isnumericを使用して挙動を比較しています。
+"""
+
+# 半角数字
+print("1".isdigit())    # True
+print("1".isdecimal())    # True
+print("1".isnumeric())    # True
+
+# 半角数値(符号付き)
+print("0.01".isdigit())    # False
+print("0.01".isdecimal())    # False
+print("0.01".isnumeric())    # False
+
+# 半角数値(小数)
+print("0.01".isdigit())    # False
+print("0.01".isdecimal())    # False
+print("0.01".isnumeric())    # False
+
+# U+0660を含む場合
+print("0.01".isdigit())    # False
+print("0.01".isdecimal())    # False
+print("0.01".isnumeric())    # False
+
+# 全角数字
+print("1".isdigit())    # True
+print("1".isdecimal())    # True
+print("1".isnumeric())    # True
+
+# 全角漢数字
+print("百".isdigit())    # False
+print("百".isdecimal())    # False
+print("百".isnumeric())    # True
+
+# 全角ローマ数字
+print("Ⅳ".isdigit())    # False
+print("Ⅳ".isdecimal())    # False
+print("Ⅳ".isnumeric())    # True
+
+
+"""
+
+"""
+
+
+
+
 
 
 
