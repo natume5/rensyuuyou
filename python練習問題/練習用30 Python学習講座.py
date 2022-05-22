@@ -275,14 +275,298 @@ print("Ⅳ".isnumeric())    # True
 
 
 """
+補足 文字列の数字変換可否の判定
 
+文字列を整数に変換する場合は組込みのint関数を、
+小数に変換する場合は組込みのfloat関数を使用します。
+"""
+
+# 整数
+integer_str = "100"
+integer_num = int(integer_str)
+print(integer_num)
+
+# 小数
+decimal_str = '1.55'
+decimal_num = float(decimal_str)
+print(decimal_num)
+
+
+"""
+数値に変換できない不正な文字列の場合はValueErrorが送出されます。
+前述のとおり、符号や小数点ではstrに実装されているメソッドでは判別できません。
+自前で正規表現を使用しても良いのですが、
+厳密には符号と小数点以外に指数表記等も考慮する必要があります。
+ですが、まず変換処理を行い変換に失敗すればValueErrorが起きるため、
+これを利用すれば符号付きや指数表記にも対応して判定と変換を行うことができます。
+"""
+
+def is_float_str(num_str, default=0):
+	try:
+		return {"is_float": True, "val": float(num_str)}
+	except ValueError:
+		return {"is_float": False, "val": default}
+
+print(is_float_str('1.5x'))    # 変換に失敗{'is_float': False, 'val': 0}
+print(is_float_str('-1.5'))    # 変換に成功{'is_float': True, 'val': -1.5}
+print(is_float_str('1E16'))    # 変換に成功{'is_float': True, 'val': 1E+16}
+
+"""
+上のサンプルでは文字列に対し、数値への変換可否と変換に成功した場合はその値を返しています。
+また、defaultを指定することで変換に失敗した場合のデフォルト値を設定することができます。
 """
 
 
+print("--- Python入門　文字列への埋め込み---")
+
+
+"""
+文字列への変数埋め込み
+
+Pythonで文字列に対して値を埋め込む方法はいくつかあるのですが、
+このページでは以下3つの方法について解説します。
+
+    f文字列
+    formatメソッド
+    printf 形式
+
+f文字列
+
+Python3.6以降、フォーマット済み文字列リテラルと呼ばれる記法が使用できます。
+f文字列と呼ばれることもあります。リテラルの先頭にfを記述し、埋め込みたい変数を中括弧でくくります。
+ただし、変数は予め定義する必要があります。
+"""
+
+item = 'apple'
+text = f"There is an {item}."
+print(text)    # There is an apple.
+
+
+"""
+formatメソッド
+
+文字列のformatメソッドを使用すると中括弧で置換フィールドを設定することができます。
+フィールドの設定方法は3つあり、中括弧単体、中括弧内に順序 or キーを指定する方法があります。
+"""
+
+item1 = 'apple'
+item2 = 'banana'
+
+# 中括弧単体
+text1 = "There are {} and {}."
+print(text1.format(item1, item2))
+
+# 順序指定
+text2 = "There are {0} and {1}."
+print(text2.format(item1, item2))
+
+# キー指定
+text3 = "There are {item1} and {item2}."
+print(text3.format(**{"item1": item1, "item2": item2}))
+
+# いずれも以下の通り出力される
+# There are apple and banana.
+
+
+"""
+printf形式
+
+C言語のprintf形式と同様に%演算子に対しフォーマットすることができます。
+順番にタプルで指定する方法と、辞書でキーを指定する方法があります。
+ただし2021年現在、公式でも「よくある問題を引き起こす」といった記述があり、
+上で紹介した2つの方法と比較して廃れつつある印象があります。
+ただし、古いライブラリでは使用されているため知識として知っておくとコードを読み解く際に役に立つかと思います。
+
+    printf-style String Formatting
+    Note The formatting operations described here exhibit a variety of 
+    quirks that lead to a number of common errors (such as failing to 
+    display tuples and dictionaries correctly). Using the newer formatted 
+    string literals, the str.format() interface, 
+    or template strings may help avoid these errors. 
+    Each of these alternatives provides their own trade-offs and benefits of 
+    simplicity, flexibility, and/or extensibility. 
+
+
+タプル
+
+%sを列挙し、%演算子の後にタプルを指定します。
+"""
+
+text = "There are %s, %s and %s."
+f_text = text % ("apple", "banana", "oranges",)
+print(f_text)    # There are apple, banana and oranges.
+
+
+"""
+辞書
+
+%とsの間に丸括弧でキーを挟むと、辞書を指定することができます。
+以下のサンプルは、"first", "second", "third"がそれぞれキーになります。
+複雑なフォーマットを指定する場合はこちらを使用したほうがよいでしょう。
+"""
+
+text = "There are %(first)s, %(second)s and %(third)s."
+
+f_text = text % {'first': 'apple', 'second': 'bananas', 'third': 'oranges'}
+print(f_text)    # There are apple, bananas and oranges
+
+
+print("--- Python入門　モジュール---")
+
+
+"""
+外部モジュールのimport
+外部モジュールのimport
+
+これまで既に何度か登場しましたが、標準ライブラリなどのモジュールを使用する際はimport文を使用します。
+例えば、標準ライブラリのmathモジュールを使用する場合、以下のようにimportします。
+"""
+
+import math
+
+print(math.pi)    # 3.141592653589793
+
+"""
+mathモジュールの一部、例えば円周率の定数piだけ使用したい場合はfrom文と合わせて
+以下のように記述することもできます。
+また、この場合はmath.を書かずに使用することができます。
+"""
+
+from math import pi
+
+print(pi)
+
+
+"""
+asによる別名
+
+さらに、importしたモジュールが長い場合、asで別名を付けることができます。
+例えばnumpyという数値計算モジュールでランダムな点を生成する場合、以下のように記述します。
+"""
+
+import numpy
+
+x = numpy.random.rand(50)
+y = numpy.random.rand(50)
+
+print(x, y)
+"""
+モジュールを利用するたびにnumpyと書かなければなりませんが、
+これにasで以下のように短い名前をつけることができます。
+"""
+
+import numpy as np
+
+x = np.random.rand(50)
+y = np.random.rand(50)
+
+print(x, y)
 
 
 
+"""
+モジュールと同名のクラス
+
+Pythonのモジュールimportで初学者が少し混乱するのが
+モジュール名と同じ名前のクラスや関数がある場合です。
+たとえば、標準ライブラリのdatetimeモジュールにはdatetimeという型が存在します。
+利用する場合、以下のようにimportします。
+"""
+
+import datetime
+# datetimeモジュールのdatetimeをインポート
+
+dt_obj = datetime.datetime(2017, 12, 22)    # datetime型のオブジェクトを生成する
+
+"""
+また、fromを使うと以下のように書き換えることができます。
+"""
+
+from datetime import datetime
+#  datetimeモジュールのdatetimeをインポート
+
+dt_obj = datetime(2017, 12, 22)    # datetime型のオブジェクトを生成する
 
 
+"""
+独自モジュールの作成
+
+次に独自にモジュールを作成して使用みましょう。
+拡張子がpyとなるPythonスクリプトを作成し、別のスクリプトから呼び出します。
 
 
+単一モジュールのimport
+
+まずはmod1.pyという名前の簡単なモジュールを作成します。
+
+# mod1.py
+def func1():
+    print('func1')
+
+同じディレクトリにrun.pyという実行スクリプトを作成します。
+
+# run.py
+import mod1
+mod1.func1() # mod1.pyのfunc1関数が呼び出される。
+
+
+パッケージ化
+
+もう少しモジュールの数を増やしてそれらをまとめたパッケージを作ってみましょう。
+先ほど作ったrun.pyと同じディレクトリ内にmypkgというパッケージディレクトリを作成します。
+mypkgの中に、mod2.py、mod3.pyというモジュールを作成してみましょう。
+
+# ./mypkg/mod2.py
+def func2():
+    print('func2')
+
+# ./mypkg/mod3.py
+class MyClass():
+    def method3(self):
+        print('method3')
+
+さらに、パッケージには_init__.pyという空ファイルを配置します。
+これはディレクトリがパッケージであることを示す目印となります。
+
+階層は以下のようになります。
+
+$ tree
+.
+├── mod1.py
+├── mypkg
+│   ├── __init__.py
+│   ├── mod2.py
+│   └── mod3.py
+└── run.py
+
+最後にモジュール伸び出しのrun.pyを以下のように記述します。
+
+import mod1
+from mypkg import mod2, mod3  
+
+mod1.func1()
+mod2.func2()
+mod3.MyClass().method3()
+
+実行してみると、それぞれのモジュールを呼び出すことが確認できます。
+
+
+__init__.pyの活用
+
+さて、先ほど空のファイルだった__init__.pyですが、以下のように修正してみましょう。
+
+# ./mypkg/__init__.py
+from . import mod2
+from . import mod3   
+
+すると、run.py側では、以下のように呼び出すこともできます。
+
+import mod1
+import mypkg
+
+mod1.func1()
+mypkg.mod2.func2()
+mypkg.mod3.MyClass().method3()
+
+mypkgをimportすると、配下のものもimportされていることが確認できますね。
+"""
