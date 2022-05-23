@@ -476,7 +476,13 @@ load JSONファイルからdict型に変換
 
 また、JSONファイルの場合はread()で一旦文字列に変換しなくても
 loadを使用することでファイルオブジェクトから辞書に変換することが可能となります。
+
 """
 
+# import json
 
+# JSONファイルから辞書に変換する
+f = open('json_file.txt', 'rb')
+d_d = json.load(f)
+print(type(d_d))    # <class 'dict'> 辞書に変換できたことが確認
 
