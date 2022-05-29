@@ -2,8 +2,10 @@
 # -*- coding: UTF-8 -*-
 
 
-from sys import argv
+import logging
+import mod1
 
-print(argv[0])    # スクリプトファイル名
-print(argv[1])    # 1番目の引数
-print(argv[2])    # 2番目の引数
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+ level=logging.INFO)
+
+mod1.sample()

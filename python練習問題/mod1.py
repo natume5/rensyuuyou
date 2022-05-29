@@ -2,6 +2,11 @@
 # -*- coding: UTF-8 -*-
 
 
-# mod1.py
-def func1():
-	print('func1です。')
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+def sample():
+	logger.error('エラー発生っ!!')
