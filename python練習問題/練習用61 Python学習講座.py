@@ -74,15 +74,3 @@ class Sample:
     	:return: 足し算した結果。
     	"""
     	return a + b
-
-"""
-
-"""
-
-
-
-
-
-
-
-
