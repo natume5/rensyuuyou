@@ -1,0 +1,13 @@
+{
+  "id": "001",
+  "numbers": [
+    1,
+    2,
+    3
+  ],
+  "colors": [
+    "blue",
+    "yellow",
+    "red"
+  ]
+}
