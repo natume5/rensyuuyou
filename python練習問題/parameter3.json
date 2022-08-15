@@ -1,0 +1,5 @@
+{
+    "shop_name": "雑貨屋",
+    "item": {"name": "お皿", "price":"200"},
+    "user": {"id":1, "name":"鈴木", "birth_month": 11}
+}

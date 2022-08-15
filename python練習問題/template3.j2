@@ -1,0 +1,10 @@
+<html>
+  <body>
+    <h1>{{ shop_name }}</h1>
+{% if user.birth_month == 11 %}
+    <p>{{ item.name }}は10%引きで{{ item.price|int * 0.9 }}円です。</p>
+{% else %}
+    <p>{{ item.name}}は通常価格で{{ item.price }}円です。</p>
+{% endif %}
+  </body>
+</html>

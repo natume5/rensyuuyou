@@ -1,0 +1,15 @@
+{% extends "base.j2" %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+    #footer { font-size: 10px; }
+  </style>
+{% endblock %}
+{% block content %}
+  <h1>テンプレート継承テスト</h1>
+  <p class="important">テンプレートが継承されています。</p>
+{% endblock %}
+{% block footer %}
+  <p>Copyright 2020</p>
+{% endblock %}
