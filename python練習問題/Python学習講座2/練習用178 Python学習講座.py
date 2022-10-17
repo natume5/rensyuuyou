@@ -853,7 +853,7 @@ Pythonにおけるインスタンスメソッドの概要です。
 第一引数にはクラスのインスタンス自身を表すselfが必要となります。
 """
 
-class TsetClass:
+class TestClass:
 
 	def __init__(self, x, y):
 		self.x = x
@@ -868,21 +868,115 @@ class TsetClass:
 
 test_class_1 = TestClass(100, 50)
 test_class_1.sample_instancemethod(display_x=False)
+# y is 50
+
+"""
+インスタンスメソッドはself.xxxのようにインスタンス属性（インスタンス変数）
+へアクセスすることができます。
+"""
 
 
 
+print("--- クラスメソッド  ---")
+
+
+"""
+Pythonにおけるクラスメソッドの概要です。
+クラスメソッドはインスタンス化しなくても呼び出すことができますが、
+インスタンスからでも呼び出すことができます。
+"""
+
+
+print("--- @classmethod  ---")
+
+
+"""
+クラスメソッドの実装には@classmethodデコレータを用います。
+サンプルコードでは、年月日を保持するクラスを作成し、
+そこにクラスメソッドとして今日の日付を基準とした
+インスタンスを生成できるようにしています。
+なおselfを用いたインスタンス属性（インスタンス変数）にはアクセスできません。
+"""
+
+import datetime
+
+
+class TestClass:
+
+	def __init__(self, year, month, day):
+		self.year = year
+		self.month = month
+		self.day = day
+
+	# クラスメソッド
+	@classmethod
+	def sample_classmethod(cls, date_diff=0):
+		today = datetime.date.today()
+		d = today + datetime.timedelta(days=date_diff)
+		return cls(d.year, d.month, d.day)
+
+# インスタンス化しないで呼び出し
+test_class_1 = TestClass.sample_classmethod()
+print(test_class_1.year, test_class_1.month, test_class_1.day)
+# 2022 10 11
+
+# インスタンス化しないで呼び出し
+test_class_2 = TestClass.sample_classmethod(-10)
+print(test_class_2.year, test_class_2.month, test_class_2.day)
+# 2022 10 1
+
+# 通常のインスタンス
+test_class_3 = TestClass(2000, 1, 1)
+print(test_class_3.year, test_class_3.month, test_class_3.day)
+# 2000 1 1
+
+"""
+※プログラムの実行時間によって結果は異なります。
+@classmethodでデコレートされたメソッドはクラスメソッドとなります。
+インスタンスメソッドの第一引数にはselfが必要ですが、
+クラスメソッドにはclsが必要です。
+これはクラス自身を表し、selfが表すクラスのインスタンス自身とは異なります。
+またclsという引数名は強制ではありませんが、
+そうすべきであるという暗黙のルールがあります。
+なおサンプルコードでも利用しているdatetime.date.todayもクラスメソッドです。
+"""
 
 
 
+print("--- スタティックメソッド   ---")
 
 
+"""
+Pythonにおけるスタティックメソッド（静的メソッド）の概要です。
+スタティックメソッドはインスタンス化しなくても呼び出すことができますが、
+インスタンスからでも呼び出すことができます。
+なおselfを用いたインスタンス属性（インスタンス変数）にはアクセスできません。
+"""
 
 
+print("--- @staticmethod  ---")
 
 
+"""
+スタティックメソッドの実装には@staticmethodデコレータを用います。
+"""
 
+class TestClass:
 
+	# スタティックメソッド
+	@staticmethod
+	def sample_staticmethod(x, y):
+		return x + y
 
+# インスタンス化しないで呼び出し
+print(TestClass.sample_staticmethod(10, 100))    # 110
 
+# インスタンス化してからも呼び出せる
+test_class = TestClass()
+print(test_class.sample_staticmethod(100, 1000))    # 1100
 
-
+"""
+@staticmethodでデコレートされたメソッドはスタティックメソッドとなります。
+インスタンスメソッドにはself、クラスメソッドにはclsが必要ですが、
+スタティックメソッドには必要ありません。
+"""
