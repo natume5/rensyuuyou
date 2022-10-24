@@ -1,0 +1,7 @@
+{
+    "Age": { "Satoshi": 40, "Kazunari": 37 },
+    "Test": [{ "Math": 70, "English": 60 },
+        { "Math": 95, "English": 40 }
+    ],
+    "Name": "Arashi"
+}

@@ -56,12 +56,91 @@ text = f.read()    # ファイルを読み込む
 print(text)    # テキストファイルの内容が出力される
 f.close()    # ファイルを閉じる
 
+"""
+ファイルの書き込み
+
+今度はファイルに書き込んでみましょう。
+"""
+
+f = open('sample.txt', 'w', encoding="UTF-8")
+f.write('aaaa bbbb cccc 書き込み中．．．')
+f.close()
+
+"""
+sample2.txtというファイルが作成され、
+３行目に記述した文字列がファイルに書き込まれます。
+上のコードでは、実行するたびにファイルの内容が新たに上書きされてしまいます。
+追記したい場合は以下のように第２引数に'a'をしていします。
+"""
+
+f = open('sample.txt', 'a', encoding="UTF-8")
+f.write('aaaa bbbb cccc 追記中・・・')
+f.close()
+
+"""
+読み書きする
+
+読み込んだ後、書き込みたい場合は以下のようにr+を指定します。
+
+f = open('sample2.txt', 'r+')
+"""
 
 
+print("--- 文字コードの指定 ---")
 
 
+"""
+encoding引数に文字コードを指定することができます。
+encodingが指定されていない場合ははプラットフォームに依存します。
+対話モードで以下の２コマンドを実行してみてください。
+お使いの環境のデフォルトのencodingを調べることができます。
+
+$ python
+>>> import locale
+>>> locale.getpreferredencoding(False)
+'UTF-8'
+
+例えば、sjisを使用したい場合は、
+以下のように引数に'shift_jis'を指定します。
+
+f  = open('sample.txt', 'r', encoding='shift_jis')
+"""
 
 
+print("--- with文　コンテキストマネージャ ---")
 
 
+"""
+ファイルを開いた後はcloseが必要ですが、
+処理中に例外が発生したりするとclose処理が呼び出されず、
+予期せぬ結果がファイルに出力されたりロックされたままになったりします。
+こういったことを防ぐため、Pythonにはwith文を使用した
+コンテキストマネージャという仕組みがあります。
 
+with
+with open('ファイルパス',  'モード') as 変数名:
+    ファイルオブジェクトを扱う処理
+
+以下のサンプルでは、sample.txtを開いて内容を変数textに格納し、
+printで出力しています。
+"""
+
+with open('sample.txt', 'r', encoding="UTF-8") as f:
+	text = f.read()
+	print(text)
+
+"""
+途中で例外が発生しても、close処理が自動的に呼びだされます。
+以下はwith文の代わりにtry/finallyを使用した例です。
+比較してみると明らかにwith文の方がすっきり記述できまることが分かりますね。
+"""
+
+print('with文の代わりにtry/finallyを使用した例')
+
+try:
+	f = open('sample.txt', 'r', encoding="UTF-8")
+	text = f.read()
+	print(text)
+
+finally:
+	f.close()
