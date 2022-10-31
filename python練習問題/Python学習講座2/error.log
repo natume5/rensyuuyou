@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "D:\テキストドキュメント１\IT・エンジニア・プログラミング\sublime text3関係\python練習問題\Python学習講座2\練習用204 Python学習講座.py", line 69, in <module>
+    hoge = 1/0
+ZeroDivisionError: division by zero
+  File "D:\テキストドキュメント１\IT・エンジニア・プログラミング\sublime text3関係\python練習問題\Python学習講座2\練習用204 Python学習講座.py", line 77, in <module>
+    hoge = 1/0
