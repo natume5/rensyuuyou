@@ -174,18 +174,149 @@ logger.info('処理を開始します。')
 """
 
 
+print("--- 複数モジュールに渡るログの設定 ---")
 
 
+"""
+モジュールが複数に渡る場合、
+予め一箇所でbasicConfigを設定すると全体に設定が適用されるため、
+後から他の場所でloggingを使う場合設定は不要です。
+（より厳密にはロガーは階層構造で管理され、
+basicConfigでルートのロガーに設定がなされている、という状況です。）
+以下の２つのモジュールを準備して確認してみましょう。
 
 
+# mod2.py
+import logging
+
+logger = logging.getLogger(__name__)
 
 
+def sample():
+    logger.error("エラー発生")
 
 
+# sample3.py
+
+import logging
+import mod2
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+
+mod2.sample()
+
+sample.pyからmod1.pyを呼び出します。
+mod1.pyの方ではbasicConfigの設定を行っていませんが、
+フォーマットされたログが出力されていることを確認することができます。
+"""
 
 
+print("--- ロガーごとに設定する ---")
 
 
+"""
+前述のとおりbasicconfigを使用するとロガー全体を設定することができるため、
+大抵のアプリケーションではbasicconfigのみで設定が事足りるのではないでしょうか。
+ですが、複雑なアプリケーションを構築する場合、
+ロガーごとにもう少し細かい設定が必要となります。
+ありがちな例として
+「決済や個人情報を扱う処理の場合はシステムのログ以外に
+監査部門に提出するため指定されたフォーマットの別ファイルでログ出力する」
+といった要件が挙げられます。
+ここからの説明で抑えていただきたいのが
+「ロガーは複数のハンドラ（≒出力先）を持ち、ハンドラは1つのフォーマッタを持つ。」
+という点です。実際に実装する際は多少順番が前後しますが、
+概ね以下のフローで理解するとわかりやすいかと思います。
+
+    ロガーを生成
+    ハンドラーを生成
+    フォーマッタを生成
+    ハンドラーにフォーマッタを設定
+    ロガーにハンドラーを設定
+
+フォーマッタはFormatterでフォーマット文字列を指定して生成します。
+"""
+
+import logging
 
 
+# 1.ロガーを取得する
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)    # 出力レベルを設定
 
+# 2.ハンドラーを生成する
+h = logging.StreamHandler()
+h.setLevel(logging.DEBUG)    # 出力レベルを設定
+
+# 3.フォーマッタを生成する
+fmt = logging.Formatter('%(asctime)s - %(name)s -\
+ %(levelname)s - %(message)s' )
+
+# 4.ハンドラーにフォーマッタを設定する
+h.setFormatter(fmt)
+
+# 5.ロガーにハンドラーを設定する
+logger.addHandler(h)
+
+# ログ出力を行う
+logger.info("ログを出力")
+# 2022-11-01 14:20:08,627 - __main__ - INFO - ログを出力
+# INFO:__main__:ログを出力
+
+"""
+出力レベルを2箇所で設定していますが、これには理由があります。
+先ほど「ロガーは複数のハンドラを設定できる」
+と書きましたがそれを念頭に以下のサンプルを見てみてください。
+"""
+
+import logging
+
+
+# ロガーを取得する
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)    # 出力レベルを設定
+
+# ハンドラー1を生成する
+h1 = logging.StreamHandler()
+h1.setLevel(logging.DEBUG)    # 出力レベルを設定
+
+# ハンドラー2を生成する
+h2 = logging.FileHandler('sample.log')
+h2.setLevel(logging.ERROR)    # 出力レベルを設定
+
+# フォーマッタを生成する
+fmt = logging.Formatter('%(asctime)s - %(name)s -\
+ %(levelname)s - %(message)s')
+
+# ハンドラーにフォーマッタを設定する
+h1.setFormatter(fmt)
+h2.setFormatter(fmt)
+
+# ロガーにハンドラーを設定する
+logger.addHandler(h1)
+logger.addHandler(h2)
+
+# ログ出力を行う
+logger.debug("debugログを出力")
+logger.info("infoログを出力")
+logger.warn("warnログを出力")
+logger.error("errorログを出力")
+# D:\テキストドキュメント１\IT・エンジニア・プログラミング\sublime text3関係\python練習問題\Python学習講座2\練習用206 Python学習講座.py:302: DeprecationWarning: The 'warn' method is deprecated, use 'warning' instead
+#   logger.warn("warnログを出力")
+# 2022-11-01 14:36:36,085 - __main__ - WARNING - warnログを出力
+# 2022-11-01 14:36:36,085 - __main__ - WARNING - warnログを出力
+# WARNING:__main__:warnログを出力
+# 2022-11-01 14:36:36,117 - __main__ - ERROR - errorログを出力
+# 2022-11-01 14:36:36,117 - __main__ - ERROR - errorログを出力
+# ERROR:__main__:errorログを出力
+
+"""
+1つのロガーにハンドラーを複数登録しています。
+2つめのFileHandlerは指定したファイルにログを出力するハンドラーです。
+ハンドラー1、ハンドラー2で設定されているレベルが異なる点に注意してください。
+上のコードを実行してみると、標準出力ではDEBUG〜ERRORまで出力されますが、
+ログファイル、つまりハンドラー2の方はERRORログしか出力されません。
+また、5行目のロガーの出力レベルをERRORに変更すると、
+標準出力もファイルの方もともにERRORログしか出力されなくなります。
+ロガーの方の出力レベルは元栓を調整する感じですね。
+"""

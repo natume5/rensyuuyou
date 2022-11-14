@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "formatters": {
+    "fmt1": {
+      "format": "%(asctime)s %(name)s %(levelname)s %(message)s [fmt1]"
+    }   
+  },  
+  "handlers": {
+    "h1": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "fmt1",
+      "stream": "ext://sys.stdout"
+    },
+    "h2": {
+      "class": "logging.StreamHandler",
+      "level": "DEBUG",
+      "formatter": "fmt1",
+      "stream": "ext://sys.stdout"
+    }
+  },  
+  "loggers": {
+    "console": {
+      "handlers": [
+        "h2"
+      ],  
+      "level": "DEBUG",
+      "qualname": "sample",
+      "propagate": "no"
+    }   
+  },  
+  "root": {
+    "level": "DEBUG",
+    "handlers": [
+      "h1"
+    ]   
+  }
+}
