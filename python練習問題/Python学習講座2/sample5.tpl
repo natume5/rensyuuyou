@@ -1,0 +1,7 @@
+    {% raw %}
+        <ul>
+        {% for item in items %}
+            <li>{{ item }}</li>
+        {% endfor %}
+        </ul>
+    {% endraw %}
