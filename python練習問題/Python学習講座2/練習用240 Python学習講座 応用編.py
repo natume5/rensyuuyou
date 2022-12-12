@@ -72,7 +72,7 @@ inputhelper.tplという名前で保存します。
 一旦マクロを作れば次から他のプロジェクトでも使い回すことが可能なので、
 開発速度の向上や省力化につながります。
 是非活用してみてください。
-"""
+
 
 from jinja2 import Template, Environment, FileSystemLoader
 
@@ -81,25 +81,4 @@ template = env.get_template('inputhelper.tpl')
 disp_text = template.render()
 print(disp_text)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+"""
