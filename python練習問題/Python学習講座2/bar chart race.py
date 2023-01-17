@@ -6,37 +6,42 @@ print("--- bar chart race ---")
 
 
 import pandas as pd
-import matplotlib.pyplot as plt
+import bar_chart_race as bcr
+import numpy as np
+import csv
+import requests
+import json
+import japanize_matplotlib
 
 
+# コロナの感染者を取得
+r = requests.get('https://opendata.corona.go.jp/api/Covid19JapanAll')
+with open('covid19_daily.json', 'w') as f:
+    f.write(r.text)
 
-df = pd.read_csv('owid-covid-data.csv', index_col='date', parse_dates=['date'])
-df.tail()
+# JSONを読み込む
+data = json.load(open("covid19_daily.json"))
 
-s = df.loc['2020-03-29']
-print(s)
+# JSONをデータフレームにする
+df = pd.DataFrame(data['itemList'])
 
-fig, ax = plt.subplots(figsize=(4, 2.5), dpi=144)
-colors = plt.cm.Dark2(range(6))
-y = s.index
-width = s.values
-ax.barh(y=y, width=width, color=colors);
+# 整形
+# 10行ごとにデータ変換
+df = df.pivot_table(
+	index='date',
+	columns='name_jp',
+	values='npatients').dropna()[::10]
 
-def nice_axes(ax):
-	ax.set_facecolor('.8')
-	ax.tick_params(labelsize=8, length=0)
-	ax.grid(True, axes='x', color='white')
-	ax.set_axissbelow(True)
-	[spine.set_visible(False) for spine in ax.spines.values()]
+# アニメーションをmp4で保存する
+bcr.bar_chart_race(
+	df=df,
+	filename='covid19_daily.mp4',
+	title='COVID-19 都道府県別感染者数',
+	orientation='h',
+	sort='desc',
+	n_bars=10,
+)
 
-nice_axes(ax)
-fig, ax_array = plt.subplots(nrows=1, ncols=3, figsize=(7, 2.5),
-	dpi=144, tight_layout=True)
-dates = ['2020-03-29', '2020-03-30', '2020-03-31']
-for ax, date in zip(ax_array, dates):
-	s = df.loc[date].sort_values()
-	ax.barh(y=s.index, width=s.values, color=colors)
-	
 
 
 
